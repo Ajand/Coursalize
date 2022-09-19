@@ -35,11 +35,13 @@ const CourseForm = ({
           name="title"
           value={course.title}
           onChange={(e) => setCourse("title", e.target.value)}
+          color="secondary"
         />
       </div>
       <FormControl
         fullWidth
         size="small"
+        color="secondary"
         css={css`
           margin-bottom: 0.75em;
         `}
@@ -64,6 +66,7 @@ const CourseForm = ({
       >
         <TextField
           label="Description"
+          color="secondary"
           fullWidth
           size="small"
           name="description"
@@ -79,6 +82,7 @@ const CourseForm = ({
       >
         <TextField
           label="Price"
+          color="secondary"
           fullWidth
           size="small"
           name="price"

@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 
 const Home = () => {
   const course = {
+    title: "The Complete 2022 Web Development Bootcamp",
     cover: "https://img-c.udemycdn.com/course/240x135/1565838_e54e_16.jpg",
     category: 0,
     price: String(ethers.utils.parseEther("500")),
@@ -27,6 +28,7 @@ const Home = () => {
       <Container
         css={css`
           margin-top: 2em;
+          margin-bottom: 2em;
         `}
       >
         <Grid container spacing={4}>

@@ -1,15 +1,32 @@
 import "../styles/globals.css";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import { WagmiConfig, createClient } from "wagmi";
-import { getDefaultProvider } from 'ethers'
+import { getDefaultProvider } from "ethers";
 
 const darkTheme = createTheme({
-  typography: {},
-  palette: {},
+  typography: {
+    fontFamily: "Karla",
+  },
+  palette: {
+    primary: {
+      main: "#FFE156",
+    },
+    secondary: {
+      main: "#541388",
+    },
+  },
   components: {
-    MuiPaper: {},
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: 12,
+          boxShadow: "rgb(20 21 33 / 10%) 0px 2px 12px 0px",
+        },
+      },
+    },
     MuiButton: {},
     MuiInputBase: {},
+    MuiTypography: {},
   },
 });
 

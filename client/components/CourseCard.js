@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope -- Unaware of jsxImportSource */
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { Paper, Avatar, Typography } from "@mui/material";
+import { Paper, Avatar, Typography, Chip } from "@mui/material";
 import { getCategoryName } from "../utils/courseCategories";
 import { ethers } from "ethers";
 
@@ -9,8 +9,8 @@ const CourseCard = ({ course }) => {
   return (
     <Paper
       css={css`
-        padding: 1em;
         cursor: pointer;
+        overflow: hidden;
       `}
     >
       <img
@@ -19,29 +19,65 @@ const CourseCard = ({ course }) => {
           width: 100%;
         `}
       />
-      <Typography variant="h6">{course.title}</Typography>
-      <Typography variant="subtitle2">
-        {getCategoryName(course.category)}
-      </Typography>
-      <Typography variant="subtitle1">
-        {ethers.utils.formatEther(course.price)} $MATIC
-      </Typography>
       <div
         css={css`
-          display: flex;
-          align-items: center;
-          justify-content: end;
+          padding: 0.75em 1em;
         `}
       >
-        <Typography
+        <div
           css={css`
-            margin-right: 0.75em;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5em;
           `}
-          variant="body2"
         >
-          {course.instructor.name}
+          <Chip
+            color="primary"
+            size="small"
+            label={getCategoryName(course.category)}
+            css={css`
+              font-weight: 600;
+            `}
+          />
+          <Typography
+            css={(theme) =>
+              css`
+                color: ${theme.palette.secondary.main};
+                font-weight: 600;
+              `
+            }
+            variant="subtitle1"
+          >
+            {ethers.utils.formatEther(course.price)} $MATIC
+          </Typography>
+        </div>
+        <Typography
+          variant="h6"
+          css={css`
+            font-weight: 700;
+            font-size: 1.1em;
+          `}
+        >
+          {course.title}
         </Typography>
-        <Avatar src={course.instructor.avatar} />
+
+        <div
+          css={css`
+            display: flex;
+            align-items: center;
+            justify-content: end;
+          `}
+        >
+          <Typography
+            css={css`
+              margin-right: 0.75em;
+            `}
+            variant="body2"
+          >
+            {course.instructor.name}
+          </Typography>
+          <Avatar src={course.instructor.avatar} />
+        </div>
       </div>
     </Paper>
   );
