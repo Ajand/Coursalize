@@ -1,4 +1,4 @@
-export default [
+const categories = [
   "Development",
   "Business",
   "Finance & Accounting",
@@ -13,3 +13,10 @@ export default [
   "Music",
   "Teaching & Academics",
 ].map((item, i) => ({ name: item, value: i }));
+
+
+export const getCategoryName = (value) => {
+  return categories.find(cat => cat.value === value).name
+}
+
+export default categories

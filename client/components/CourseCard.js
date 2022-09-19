@@ -2,8 +2,10 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { Paper, Avatar, Typography } from "@mui/material";
+import { getCategoryName } from "../utils/courseCategories";
+import { ethers } from "ethers";
 
-const CourseCard = () => {
+const CourseCard = ({ course }) => {
   return (
     <Paper
       css={css`
@@ -12,14 +14,18 @@ const CourseCard = () => {
       `}
     >
       <img
-        src="https://img-c.udemycdn.com/course/240x135/1565838_e54e_16.jpg"
+        src={course.cover}
         css={css`
           width: 100%;
         `}
       />
-      <Typography variant="h6">Very important course</Typography>
-      <Typography variant="subtitle2">Development</Typography>
-      <Typography variant="subtitle1">500 $MATIC</Typography>
+      <Typography variant="h6">{course.title}</Typography>
+      <Typography variant="subtitle2">
+        {getCategoryName(course.category)}
+      </Typography>
+      <Typography variant="subtitle1">
+        {ethers.utils.formatEther(course.price)} $MATIC
+      </Typography>
       <div
         css={css`
           display: flex;
@@ -33,9 +39,9 @@ const CourseCard = () => {
           `}
           variant="body2"
         >
-          Dr. Angela Yu
+          {course.instructor.name}
         </Typography>
-        <Avatar src="https://img-c.udemycdn.com/user/200_H/31334738_a13c_2.jpg" />
+        <Avatar src={course.instructor.avatar} />
       </div>
     </Paper>
   );
