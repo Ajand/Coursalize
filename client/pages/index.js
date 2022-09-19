@@ -1,10 +1,11 @@
 /* eslint-disable react/react-in-jsx-scope -- Unaware of jsxImportSource */
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import Header from "../components/Header";
 import { Grid, Container } from "@mui/material";
-import CourseCard from "../components/CourseCard";
 import { ethers } from "ethers";
+import CourseCard from "../components/CourseCard";
+import Header from "../components/Header";
+import Hero from "../components/Hero";
 
 const Home = () => {
   const course = {
@@ -25,6 +26,7 @@ const Home = () => {
   return (
     <div>
       <Header />
+      <Hero />
       <Container
         css={css`
           margin-top: 1em;

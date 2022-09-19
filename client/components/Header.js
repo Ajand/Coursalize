@@ -43,102 +43,107 @@ const Header = () => {
 
   if (!domLoader) return <></>;
   return (
-    <div
-      position="static"
-      css={css`
-        border-radius: 0;
-        padding: 0em 3.5em;
-      `}
-    >
-      <Toolbar
+    <Container>
+      <div
         css={css`
-          display: flex;
-          justify-content: space-between;
+          border-radius: 0;
+          padding-top: 1em;
+          padding-bottom: 1em;
+          position: relative;
+          z-index: 1000;
+          width: 100%;
         `}
       >
         <div
           css={css`
             display: flex;
-            align-items: center;
-            cursor: pointer;
+            justify-content: space-between;
           `}
-          onClick={() => router.push("/")}
         >
-          <Typography
-            variant="h5"
+          <div
             css={css`
-              font-weight: 700;
+              display: flex;
+              align-items: center;
+              cursor: pointer;
             `}
-            component="div"
-            color="secondary"
-            sx={{ flexGrow: 1 }}
+            onClick={() => router.push("/")}
           >
-            Coursalize
-          </Typography>
-        </div>
-        <div>
-          {isConnected ? (
-            <>
-              <Button
-                color="inherit"
-                onClick={() => router.push(`/course/create`)}
-              >
-                + Course
-              </Button>
+            <Typography
+              variant="h5"
+              css={css`
+                font-weight: 700;
+              `}
+              component="div"
+              color="secondary"
+              sx={{ flexGrow: 1 }}
+            >
+              Coursalize
+            </Typography>
+          </div>
+          <div>
+            {isConnected ? (
               <>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
+                <Button
                   color="inherit"
+                  onClick={() => router.push(`/course/create`)}
                 >
-                  <AccountCircle />
-                </IconButton>
-              </>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={() => router.push(`/user/${address}`)}>
-                  Profile
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    disconnect();
-                    handleClose();
+                  + Course
+                </Button>
+                <>
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={handleMenu}
+                    color="inherit"
+                  >
+                    <AccountCircle />
+                  </IconButton>
+                </>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
                   }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
                 >
-                  Disconnect
-                </MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => connect()}
-              >
-                Connect
-              </Button>
-            </>
-          )}
+                  <MenuItem onClick={() => router.push(`/user/${address}`)}>
+                    Profile
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      disconnect();
+                      handleClose();
+                    }}
+                  >
+                    Disconnect
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => connect()}
+                >
+                  Connect
+                </Button>
+              </>
+            )}
+          </div>
         </div>
-      </Toolbar>
-    </div>
+      </div>
+    </Container>
   );
 };
 

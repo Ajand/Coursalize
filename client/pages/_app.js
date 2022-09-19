@@ -9,11 +9,16 @@ const darkTheme = createTheme({
   },
   palette: {
     primary: {
-      main: "#FFD61F",
-      dark: "#F5C800"
+      main: "#FFC624",
+      dark: "#f5b400",
     },
     secondary: {
-      main: "#541388",
+      main: "#34A3A6",
+    },
+    background: {
+      default: "#f8f8f8",
+      paper: "#fff",
+      hero: "linear-gradient(125deg, rgba(240,236,196,1) 0%, rgba(242,241,230,1) 41%)",
     },
   },
   components: {
