@@ -9,6 +9,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Typography,
 } from "@mui/material";
 
 import courseCategories from "../utils/courseCategories";
@@ -69,9 +70,61 @@ const CourseForm = ({ course, setCourse }) => {
           margin-bottom: 0.75em;
         `}
       >
-        <Button variant="outlined" color="secondary">
-          Select A Cover for your course
-        </Button>
+        {course.cover ? (
+          <>
+            <div
+              css={css`
+                margin-bottom: 0.75em;
+              `}
+            >
+              <div
+                css={css`
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  margin-bottom: 0.5em;
+                `}
+              >
+                <Typography variant="body1">Cover:</Typography>
+                <div>
+                  <Button
+                    color="secondary"
+                    component="label"
+                    onChange={(e) => setCourse("cover", e.target.files[0])}
+                  >
+                    Change
+                    <input hidden accept="image/*" type="file" />
+                  </Button>
+                  <Button
+                    onClick={(e) => setCourse("cover", null)}
+                    color="error"
+                  >
+                    Remove
+                  </Button>
+                </div>
+              </div>
+              <img
+                src={URL.createObjectURL(course.cover)}
+                css={css`
+                  width: 100%;
+                `}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="small"
+              component="label"
+              onChange={(e) => setCourse("cover", e.target.files[0])}
+            >
+              Select A Cover for your course
+              <input hidden accept="image/*" type="file" />
+            </Button>
+          </>
+        )}
       </div>
       <Divider
         css={css`
