@@ -2,7 +2,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { useState, useEffect } from "react";
-
 import {
   AppBar,
   Toolbar,
@@ -15,6 +14,7 @@ import {
 import { AccountCircle } from "@mui/icons-material";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
+import { useRouter } from "next/router";
 
 const Header = () => {
   const [domLoader, setDomLoader] = useState(false);
@@ -31,7 +31,7 @@ const Header = () => {
   });
   const { disconnect } = useDisconnect();
 
-  console.log(address);
+  const router = useRouter();
 
   const handleMenu = (e) => {
     setAnchorEl(e.currentTarget);
@@ -97,7 +97,9 @@ const Header = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={() => router.push(`/user/${address}`)}>
+                  Profile
+                </MenuItem>
                 <MenuItem
                   onClick={() => {
                     disconnect();
