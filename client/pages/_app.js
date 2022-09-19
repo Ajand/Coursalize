@@ -1,5 +1,7 @@
 import "../styles/globals.css";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
+import { WagmiConfig, createClient } from "wagmi";
+import { getDefaultProvider } from 'ethers'
 
 const darkTheme = createTheme({
   typography: {},
@@ -11,12 +13,19 @@ const darkTheme = createTheme({
   },
 });
 
+const client = createClient({
+  autoConnect: true,
+  provider: getDefaultProvider(),
+});
+
 function MyApp({ Component, pageProps }) {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <Component {...pageProps} />{" "}
-    </ThemeProvider>
+    <WagmiConfig client={client}>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
+    </WagmiConfig>
   );
 }
 
