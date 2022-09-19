@@ -21,6 +21,12 @@ const CreateCourse = () => {
     setCourseInput(nCourse);
   };
 
+  const isDisabled = () => {
+    const { title, category, price, description } = course;
+    if (title && category && !isNaN(price) && description) return false;
+    return true;
+  };
+
   return (
     <div>
       <Header />
@@ -47,7 +53,13 @@ const CreateCourse = () => {
                   margin-bottom: 1em;
                 `}
               />
-              <CourseForm course={course} setCourse={setCourse} />
+              <CourseForm
+                course={course}
+                setCourse={setCourse}
+                isDisabled={isDisabled()}
+                submitLabel="Create The Course"
+                onSubmit={() => {}}
+              />
             </Paper>
           </Grid>
           <Grid item md={3}></Grid>

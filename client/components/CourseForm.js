@@ -14,7 +14,13 @@ import {
 
 import courseCategories from "../utils/courseCategories";
 
-const CourseForm = ({ course, setCourse }) => {
+const CourseForm = ({
+  course,
+  setCourse,
+  submitLabel,
+  onSubmit,
+  isDisabled,
+}) => {
   return (
     <div>
       <div
@@ -56,14 +62,29 @@ const CourseForm = ({ course, setCourse }) => {
           margin-bottom: 0.75em;
         `}
       >
-        <TextField label="Description" fullWidth size="small" name="title" />
+        <TextField
+          label="Description"
+          fullWidth
+          size="small"
+          name="description"
+          value={course.description}
+          onChange={(e) => setCourse("description", e.target.value)}
+          multiline
+        />
       </div>
       <div
         css={css`
           margin-bottom: 0.75em;
         `}
       >
-        <TextField label="Price" fullWidth size="small" name="title" />
+        <TextField
+          label="Price"
+          fullWidth
+          size="small"
+          name="price"
+          value={course.price}
+          onChange={(e) => setCourse("price", e.target.value)}
+        />
       </div>
       <div
         css={css`
@@ -137,8 +158,13 @@ const CourseForm = ({ course, setCourse }) => {
           justify-content: center;
         `}
       >
-        <Button variant="contained" color="primary">
-          Create The Course
+        <Button
+          disabled={isDisabled}
+          onClick={onSubmit}
+          variant="contained"
+          color="primary"
+        >
+          {submitLabel}
         </Button>
       </div>
     </div>
