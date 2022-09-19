@@ -27,7 +27,7 @@ const Home = () => {
       <Header />
       <Container
         css={css`
-          margin-top: 2em;
+          margin-top: 1em;
           margin-bottom: 2em;
         `}
       >

@@ -9,7 +9,8 @@ const darkTheme = createTheme({
   },
   palette: {
     primary: {
-      main: "#FFE156",
+      main: "#FFD61F",
+      dark: "#F5C800"
     },
     secondary: {
       main: "#541388",
@@ -24,7 +25,11 @@ const darkTheme = createTheme({
         },
       },
     },
-    MuiButton: {},
+    MuiButton: {
+      styleOverrides: {
+        root: { borderRadius: 10 },
+      },
+    },
     MuiInputBase: {},
     MuiTypography: {},
   },

@@ -3,7 +3,7 @@
 import { css } from "@emotion/react";
 import { useState, useEffect } from "react";
 import {
-  AppBar,
+  Container,
   Toolbar,
   Typography,
   Button,
@@ -43,11 +43,11 @@ const Header = () => {
 
   if (!domLoader) return <></>;
   return (
-    <AppBar
+    <div
       position="static"
-      color="inherit"
       css={css`
         border-radius: 0;
+        padding: 0em 3.5em;
       `}
     >
       <Toolbar
@@ -64,7 +64,15 @@ const Header = () => {
           `}
           onClick={() => router.push("/")}
         >
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h5"
+            css={css`
+              font-weight: 700;
+            `}
+            component="div"
+            color="secondary"
+            sx={{ flexGrow: 1 }}
+          >
             Coursalize
           </Typography>
         </div>
@@ -119,14 +127,18 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Button color="inherit" onClick={() => connect()}>
+              <Button
+                color="primary"
+                variant="contained"
+                onClick={() => connect()}
+              >
                 Connect
               </Button>
             </>
           )}
         </div>
       </Toolbar>
-    </AppBar>
+    </div>
   );
 };
 
