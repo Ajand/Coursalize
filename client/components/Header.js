@@ -62,6 +62,7 @@ const Header = () => {
             align-items: center;
             cursor: pointer;
           `}
+          onClick={() => router.push("/")}
         >
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Coursalize
