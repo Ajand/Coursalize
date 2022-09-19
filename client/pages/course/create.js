@@ -1,11 +1,26 @@
 /* eslint-disable react/react-in-jsx-scope -- Unaware of jsxImportSource */
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import { useState } from "react";
 import Header from "../../components/Header";
 import { Container, Grid, Paper, Typography, Divider } from "@mui/material";
 import CourseForm from "../../components/CourseForm";
 
 const CreateCourse = () => {
+  const [course, setCourse] = useState({
+    title: "",
+    category: "",
+    price: "",
+    cover: null,
+    description: "",
+  });
+
+  const changeCourse = (key, value) => {
+    const nCourse = { ...course };
+    nCourse[key] = value;
+    setCourse(nCourse);
+  };
+
   return (
     <div>
       <Header />
