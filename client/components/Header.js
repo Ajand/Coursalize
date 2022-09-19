@@ -70,6 +70,12 @@ const Header = () => {
         <div>
           {isConnected ? (
             <>
+              <Button
+                color="inherit"
+                onClick={() => router.push(`/course/create`)}
+              >
+                + Course
+              </Button>
               <>
                 <IconButton
                   size="large"
