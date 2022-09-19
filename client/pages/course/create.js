@@ -2,7 +2,8 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import Header from "../../components/Header";
-import { Container, Grid, Paper, TextField, Button } from "@mui/material";
+import { Container, Grid, Paper, Typography, Divider } from "@mui/material";
+import CourseForm from "../../components/CourseForm";
 
 const CreateCourse = () => {
   return (
@@ -18,7 +19,20 @@ const CreateCourse = () => {
                 padding: 2em;
               `}
             >
-              This is gonna be the create course form
+              <Typography
+                variant="h6"
+                css={css`
+                  margin-bottom: 0.5em;
+                `}
+              >
+                Create a course
+              </Typography>
+              <Divider
+                css={css`
+                  margin-bottom: 1em;
+                `}
+              />
+              <CourseForm />
             </Paper>
           </Grid>
           <Grid item md={3}></Grid>
