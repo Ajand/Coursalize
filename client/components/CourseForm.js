@@ -1,9 +1,19 @@
 /* eslint-disable react/react-in-jsx-scope -- Unaware of jsxImportSource */
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { TextField, Button, Divider } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Divider,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 
-const CourseForm = () => {
+import courseCategories from "../utils/courseCategories";
+
+const CourseForm = ({ course, setCourse }) => {
   return (
     <div>
       <div
@@ -11,38 +21,48 @@ const CourseForm = () => {
           margin-bottom: 0.75em;
         `}
       >
-        <TextField label="Title" fullWidth="true" size="small" name="title" />
+        <TextField
+          label="Title"
+          fullWidth
+          size="small"
+          name="title"
+          value={course.title}
+          onChange={(e) => setCourse("title", e.target.value)}
+        />
       </div>
-      <div
+      <FormControl
+        fullWidth
+        size="small"
         css={css`
           margin-bottom: 0.75em;
         `}
       >
-        <TextField
+        <InputLabel>Category</InputLabel>
+        <Select
+          value={course.category}
           label="Category"
-          fullWidth="true"
-          size="small"
-          name="title"
-        />
+          onChange={(e) => setCourse("category", e.target.value)}
+        >
+          {courseCategories.map((category) => (
+            <MenuItem value={category.value} key={category.value}>
+              {category.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <div
+        css={css`
+          margin-bottom: 0.75em;
+        `}
+      >
+        <TextField label="Description" fullWidth size="small" name="title" />
       </div>
       <div
         css={css`
           margin-bottom: 0.75em;
         `}
       >
-        <TextField
-          label="Description"
-          fullWidth="true"
-          size="small"
-          name="title"
-        />
-      </div>
-      <div
-        css={css`
-          margin-bottom: 0.75em;
-        `}
-      >
-        <TextField label="Price" fullWidth="true" size="small" name="title" />
+        <TextField label="Price" fullWidth size="small" name="title" />
       </div>
       <div
         css={css`

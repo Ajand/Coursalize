@@ -7,7 +7,7 @@ import { Container, Grid, Paper, Typography, Divider } from "@mui/material";
 import CourseForm from "../../components/CourseForm";
 
 const CreateCourse = () => {
-  const [course, setCourse] = useState({
+  const [course, setCourseInput] = useState({
     title: "",
     category: "",
     price: "",
@@ -15,10 +15,10 @@ const CreateCourse = () => {
     description: "",
   });
 
-  const changeCourse = (key, value) => {
+  const setCourse = (key, value) => {
     const nCourse = { ...course };
     nCourse[key] = value;
-    setCourse(nCourse);
+    setCourseInput(nCourse);
   };
 
   return (
@@ -47,7 +47,7 @@ const CreateCourse = () => {
                   margin-bottom: 1em;
                 `}
               />
-              <CourseForm />
+              <CourseForm course={course} setCourse={setCourse} />
             </Paper>
           </Grid>
           <Grid item md={3}></Grid>
