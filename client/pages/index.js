@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope -- Unaware of jsxImportSource */
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { Grid, Container } from "@mui/material";
+import { Grid, Container, Typography } from "@mui/material";
 import { ethers } from "ethers";
 import CourseCard from "../components/CourseCard";
 import Header from "../components/Header";
@@ -29,10 +29,19 @@ const Home = () => {
       <Hero />
       <Container
         css={css`
-          margin-top: 1em;
+          margin-top: 3em;
           margin-bottom: 2em;
         `}
       >
+        <Typography
+          css={css`
+            margin-bottom: 1em;
+            font-weight: 700;
+          `}
+          variant="h5"
+        >
+          Most Popular Courses
+        </Typography>
         <Grid container spacing={4}>
           {courses.map((course) => (
             <Grid item md={4}>
