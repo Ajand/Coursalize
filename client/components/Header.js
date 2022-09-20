@@ -116,7 +116,7 @@ const Header = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={() => router.push(`/user/${address}`)}>
+                  <MenuItem onClick={() => router.push(`/profile/${address}`)}>
                     Profile
                   </MenuItem>
                   <MenuItem
