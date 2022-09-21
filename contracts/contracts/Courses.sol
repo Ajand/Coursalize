@@ -13,10 +13,15 @@ contract Courses is ERC1155 {
     string private _tablePrefix = "coursalize";
 
     // Courses
+    struct Course {
+        uint256 price;
+        address instructor;
+    }
+
     string private _courseTable;
     uint256 private _courseTableId;
     Counters.Counter private _courseIds;
-    mapping(uint256 => uint256) public _coursePrices;
+    mapping(uint256 => Course) public _courses;
 
     // Lecture Table
     string private _lectureTable;
@@ -234,7 +239,56 @@ contract Courses is ERC1155 {
                 "')"
             )
         );
-        _coursePrices[newItemId] = _price;
+        _courses[newItemId] = Course(_price, msg.sender);
         _courseIds.increment();
+    }
+
+    function mintCourse(uint256 _courseId) public payable {
+        uint256 nextCourseId = _courseIds.current();
+        require(_courseId < nextCourseId, "not defined");
+        Course memory course = _courses[_courseId];
+        require(msg.value == course.price, "wrong value");
+        (bool sent, ) = course.instructor.call{value: msg.value}("");
+        require(sent, "faild to pay");
+        // mint course for minter
+        _mint(msg.sender, _courseId, 1, bytes(""));
+    }
+
+    function editCourse(
+        uint256 _courseId,
+        string memory _title,
+        uint256 _category,
+        string memory _description,
+        string memory _cover,
+        uint256 _price
+    ) public {
+        require(_courseId < _courseIds.current(), "not defined");
+        require(_courses[_courseId].instructor == msg.sender, "unauthorized");
+        _tableland.runSQL(
+            address(this),
+            _courseTableId,
+            string.concat(
+                string.concat(
+                    "UPDATE ",
+                    _courseTable,
+                    " SET title = '",
+                    _title,
+                    "', category = ",
+                    Strings.toString(_category),
+                    ", description = '",
+                    _description,
+                    "', cover = '"
+                ),
+                string.concat(
+                    _cover,
+                    "', price = ",
+                    Strings.toString(_price),
+                    " WHERE id = ",
+                    Strings.toString(_courseId),
+                    ";"
+                )
+            )
+        );
+        _courses[_courseId] = Course(_price, msg.sender);
     }
 }
