@@ -8,17 +8,15 @@ import "@tableland/evm/contracts/ITablelandTables.sol";
 
 contract Courses is ERC1155 {
     using Counters for Counters.Counter;
-    Counters.Counter private _courseIds;
-    Counters.Counter private _userIds;
 
     ITablelandTables private _tableland;
     string private _tablePrefix = "coursalize";
 
-    mapping(address => bool) public _users;
-
-    // Courses Table
+    // Courses
     string private _courseTable;
     uint256 private _courseTableId;
+    Counters.Counter private _courseIds;
+    mapping(uint256 => uint256) public _coursePrices;
 
     // Lecture Table
     string private _lectureTable;
@@ -27,6 +25,8 @@ contract Courses is ERC1155 {
     // Users Table
     string private _userTable;
     uint256 private _userTableId;
+    Counters.Counter private _userIds;
+    mapping(address => bool) public _users;
 
     // Reviews Table
     string private _reviewTable;
@@ -44,7 +44,6 @@ contract Courses is ERC1155 {
             string.concat(
                 "CREATE TABLE ",
                 _tablePrefix,
-                "_course",
                 "_",
                 Strings.toString(block.chainid),
                 " (id int, title text, category int, description text, cover text, price int, instructor text);"
@@ -53,7 +52,6 @@ contract Courses is ERC1155 {
 
         _courseTable = string.concat(
             _tablePrefix,
-            "_course",
             "_",
             Strings.toString(block.chainid),
             "_",
@@ -202,5 +200,41 @@ contract Courses is ERC1155 {
             _userIds.increment();
             _users[msg.sender] = true;
         }
+    }
+
+    function createCourse(
+        string memory _title,
+        uint256 _category,
+        string memory _description,
+        string memory _cover,
+        uint256 _price
+    ) public {
+        require(_users[msg.sender] == true, "complete profile");
+        uint256 newItemId = _courseIds.current();
+        _tableland.runSQL(
+            address(this),
+            _courseTableId,
+            string.concat(
+                "INSERT INTO ",
+                _courseTable,
+                " (id, title, category, description, cover, price, instructor) VALUES (",
+                Strings.toString(newItemId),
+                ", '",
+                _title,
+                "', ",
+                Strings.toString(_category),
+                ", '",
+                _description,
+                "', '",
+                _cover,
+                "', ",
+                Strings.toString(_price),
+                ", '",
+                Strings.toHexString(uint160(msg.sender), 20),
+                "')"
+            )
+        );
+        _coursePrices[newItemId] = _price;
+        _courseIds.increment();
     }
 }
