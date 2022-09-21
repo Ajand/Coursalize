@@ -1,6 +1,25 @@
 require("@nomicfoundation/hardhat-toolbox");
+require("@nomiclabs/hardhat-etherscan");
 
-/** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
-  solidity: "0.8.17",
+const MUMBAI_PRIVATE_KEY =
+  "4455cd9e24d853d9696639318ea3b57d299590bc7e328be1a0d4375610041434";
+
+const POLYGON_SCAN_API = "93IV7F2QHMYGKUZ8R4ZR9SEUTNB58HF479";
+
+const MUMBAI_RPC =
+  "https://polygon-mumbai.g.alchemy.com/v2/PKDcpW-zo09u7KieHzUl5H0qujGgr5nv";
+
+const config = {
+  solidity: "0.8.12",
+  networks: {
+    mumbai: {
+      url: MUMBAI_RPC,
+      accounts: [MUMBAI_PRIVATE_KEY],
+    },
+  },
+  etherscan: {
+    apiKey: POLYGON_SCAN_API,
+  },
 };
+
+module.exports = config;

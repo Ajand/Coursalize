@@ -5,22 +5,17 @@
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
 const hre = require("hardhat");
+require("@nomiclabs/hardhat-etherscan");
+
+const registryAddress = "0x4b48841d4b32C4650E4ABc117A03FE8B51f38F68";
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const Courses = await hre.ethers.getContractFactory("Courses");
+  const courses = await Courses.deploy(registryAddress);
 
-  const lockedAmount = hre.ethers.utils.parseEther("1");
+  await courses.deployed();
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
-
-  console.log(
-    `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+  console.log(`Coursesdeployed at: ${courses.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
