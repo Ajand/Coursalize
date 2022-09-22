@@ -26,6 +26,7 @@ contract Courses is ERC1155 {
     // Lecture Table
     string private _lectureTable;
     uint256 private _lectureTableId;
+    Counters.Counter private _lectureIds;
 
     // Users Table
     string private _userTable;
@@ -69,7 +70,6 @@ contract Courses is ERC1155 {
             string.concat(
                 "CREATE TABLE ",
                 _tablePrefix,
-                "_lecture",
                 "_",
                 Strings.toString(block.chainid),
                 " (id int, courseId int, name text, description text, media text);"
@@ -78,7 +78,6 @@ contract Courses is ERC1155 {
 
         _lectureTable = string.concat(
             _tablePrefix,
-            "_lecture",
             "_",
             Strings.toString(block.chainid),
             "_",
@@ -290,5 +289,36 @@ contract Courses is ERC1155 {
             )
         );
         _courses[_courseId] = Course(_price, msg.sender);
+    }
+
+    function addLecture(
+        uint256 _courseId,
+        string memory _name,
+        string memory _description,
+        string memory _media
+    ) public {
+        require(_courseId < _courseIds.current(), "not defined");
+        require(_courses[_courseId].instructor == msg.sender, "unauthorized");
+        uint256 newItemId = _lectureIds.current();
+        _tableland.runSQL(
+            address(this),
+            _lectureTableId,
+            string.concat(
+                "INSERT INTO ",
+                _lectureTable,
+                " (id, courseId, name, description, media) VALUES (",
+                Strings.toString(newItemId),
+                ",",
+                Strings.toString(_courseId),
+                ", '",
+                _name,
+                "', '",
+                _description,
+                "', '",
+                _media,
+                "')"
+            )
+        );
+        _lectureIds.increment();
     }
 }
