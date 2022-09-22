@@ -13,7 +13,8 @@ export const DataContext = createContext({
   tableland: null,
   courseIds: null,
   getCourseInfo: null,
-  getCourseLectures: null
+  getCourseLectures: null,
+  getLecture: null
 });
 
 const TABLE_LAND_URI = "https://testnet.tableland.network";
@@ -93,6 +94,14 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  const getLecture = async (lectureId) => {
+    if (tableland) {
+      return tableland.read(
+        `SELECT * FROM ${lectureTable} WHERE id=${lectureId}`
+      );
+    }
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -103,7 +112,8 @@ export const DataProvider = ({ children }) => {
         tableland,
         courseIds,
         getCourseInfo,
-        getCourseLectures
+        getCourseLectures,
+        getLecture
       }}
     >
       {children}

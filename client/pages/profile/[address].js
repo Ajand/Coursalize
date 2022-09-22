@@ -253,7 +253,7 @@ const Profile = () => {
                 `}
               >
                 <Avatar
-                  src={`https://ipfs.io/ipfs/${userInfo.avatar}`}
+                  src={`https://nftstorage.link/ipfs/${userInfo.avatar}`}
                   sx={{ width: 240, height: 240 }}
                 />
               </div>

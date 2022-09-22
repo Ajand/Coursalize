@@ -244,7 +244,7 @@ const Course = () => {
                 `}
               >
                 <img
-                  src={`https://ipfs.io/ipfs/${courseInfo.cover}`}
+                  src={`https://nftstorage.link/ipfs/${courseInfo.cover}`}
                   css={css`
                     width: 100%;
                   `}
