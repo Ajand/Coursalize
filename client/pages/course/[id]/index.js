@@ -17,6 +17,7 @@ import { useRouter } from "next/router";
 import { DataContext } from "../../../lib/DataProvider";
 import { useAccount } from "wagmi";
 import { getCategoryName } from "../../../utils/courseCategories";
+import LectureList from "../../../components/LectureList";
 
 const Course = () => {
   const router = useRouter();
@@ -27,8 +28,6 @@ const Course = () => {
 
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [courseInfo, setCourseInfo] = useState(null);
-
-  console.log(id);
 
   const formatResult = (result) => {
     return result.rows.map((row, i) =>
@@ -284,6 +283,7 @@ const Course = () => {
                 </Button>
               </div>
             </div>
+            <LectureList courseId={id} hasAccess={true} />
           </Grid>
         </Grid>
       </Container>
