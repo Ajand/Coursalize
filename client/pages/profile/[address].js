@@ -9,9 +9,15 @@ import {
   Typography,
   Divider,
   Avatar,
+  Button,
 } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import CourseCard from "../../components/CourseCard";
 import { ethers } from "ethers";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
+import { DataContext } from "../../lib/DataProvider";
+import PlaceholderLoading from "react-placeholder-loading";
 
 const Profile = () => {
   const course = {
@@ -25,9 +31,43 @@ const Profile = () => {
     },
   };
 
+  const { address: userAddress } = useAccount();
+  const router = useRouter();
+  const { address } = router.query;
+  const { getUserInfo, tableland } = useContext(DataContext);
+
+  const [loadingInfo, setLoadingInfo] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+
+  const formatResult = (result) => {
+    return result.rows.map((row, i) =>
+      row.reduce((pV, cV, j) => {
+        const nObj = { ...pV };
+        nObj[result.columns[j].name] = cV;
+        return nObj;
+      }, {})
+    );
+  };
+
+  useEffect(() => {
+    const main = async () => {
+      setLoadingInfo(true);
+      const uInfo = await getUserInfo(address.toLowerCase());
+      setUserInfo(formatResult(uInfo)[0]);
+      setLoadingInfo(false);
+    };
+
+    if (tableland && address) {
+      main();
+    }
+  }, [tableland, address]);
+
   const courses = Array(6)
     .fill(0)
     .map((c, i) => ({ ...course, id: i }));
+
+  console.log(loadingInfo, userInfo);
+
   return (
     <div>
       <Header />
@@ -39,58 +79,153 @@ const Profile = () => {
       >
         <Grid container>
           <Grid item md={8}>
-            <Typography
-              css={css`
-                font-weight: 700;
-                margin-bottom: 0.1em;
-              `}
-              variant="h4"
-            >
-              Dr. Angela Yu
-            </Typography>
-            <Typography variant="h6">Developer and Lead Instructor</Typography>
-            <Typography
-              css={css`
-                margin-top: 1em;
-                font-size: 1.5em;
-                font-weight: 600;
-                margin-bottom: 0.25em;
-              `}
-              variant="h5"
-            >
-              About me
-            </Typography>
-            <Typography variant="body1">
-              I'm Angela, I'm a developer with a passion for teaching. I'm the
-              lead instructor at the London App Brewery, London's leading
-              Programming Bootcamp. I've helped hundreds of thousands of
-              students learn to code and change their lives by becoming a
-              developer. I've been invited by companies such as Twitter,
-              Facebook and Google to teach their employees. My first foray into
-              programming was when I was just 12 years old, wanting to build my
-              own Space Invader game. Since then, I've made hundred of websites,
-              apps and games. But most importantly, I realised that my greatest
-              passion is teaching. I spend most of my time researching how to
-              make learning to code fun and make hard concepts easy to
-              understand. I apply everything I discover into my bootcamp
-              courses. In my courses, you'll find lots of geeky humour but also
-              lots of explanations and animations to make sure everything is
-              easy to understand. I'll be there for you every step of the way.
-            </Typography>
-          </Grid>
-          <Grid item md={4}>
             <div
               css={css`
                 display: flex;
-                justify-content: center;
               `}
             >
-              {" "}
-              <Avatar
-                src="https://img-c.udemycdn.com/user/200_H/31334738_a13c_2.jpg"
-                sx={{ width: 240, height: 240 }}
-              />
+              {loadingInfo || !userInfo.display_name ? (
+                <>
+                  <PlaceholderLoading shape="rect" width={300} height={36} />
+                </>
+              ) : (
+                <Typography
+                  css={css`
+                    font-weight: 700;
+                    margin-bottom: 0.1em;
+                  `}
+                  variant="h4"
+                >
+                  {userInfo.display_name}
+                </Typography>
+              )}
+              {userAddress &&
+                address &&
+                userAddress.toLowerCase() === address.toLowerCase() && (
+                  <Button
+                    css={css`
+                      margin-left: 16px;
+                    `}
+                    color="secondary"
+                    size="small"
+                    onClick={() => {
+                      router.push("/profile/edit");
+                    }}
+                  >
+                    Edit
+                  </Button>
+                )}
             </div>
+
+            {loadingInfo || !userInfo.headline ? (
+              <>
+                <div
+                  css={css`
+                    margin-top: 1em;
+                  `}
+                >
+                  <PlaceholderLoading shape="rect" width={360} height={20} />
+                </div>
+              </>
+            ) : (
+              <Typography variant="h6">{userInfo.headline}</Typography>
+            )}
+
+            {loadingInfo || !userInfo.display_name ? (
+              <>
+                <div
+                  css={css`
+                    margin-top: 1em;
+                  `}
+                >
+                  <PlaceholderLoading shape="rect" width={80} height={32} />
+                </div>
+                <div
+                  css={css`
+                    margin-top: 1em;
+                  `}
+                >
+                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                </div>
+                <div
+                  css={css`
+                    margin-top: 1em;
+                  `}
+                >
+                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                </div>{" "}
+                <div
+                  css={css`
+                    margin-top: 1em;
+                  `}
+                >
+                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                </div>{" "}
+                <div
+                  css={css`
+                    margin-top: 1em;
+                  `}
+                >
+                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                </div>{" "}
+                <div
+                  css={css`
+                    margin-top: 1em;
+                  `}
+                >
+                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                </div>{" "}
+                <div
+                  css={css`
+                    margin-top: 1em;
+                  `}
+                >
+                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                </div>
+              </>
+            ) : (
+              <>
+                <Typography
+                  css={css`
+                    margin-top: 1em;
+                    font-size: 1.5em;
+                    font-weight: 600;
+                    margin-bottom: 0.25em;
+                  `}
+                  variant="h5"
+                >
+                  About me
+                </Typography>
+                <Typography variant="body1">{userInfo.bio}</Typography>
+              </>
+            )}
+          </Grid>
+
+          <Grid item md={4}>
+            {loadingInfo || !userInfo.display_name ? (
+              <>
+                <div
+                  css={css`
+                    display: flex;
+                    justify-content: center;
+                  `}
+                >
+                  <PlaceholderLoading shape="circle" width={240} height={240} />
+                </div>
+              </>
+            ) : (
+              <div
+                css={css`
+                  display: flex;
+                  justify-content: center;
+                `}
+              >
+                <Avatar
+                  src={`https://ipfs.io/ipfs/${userInfo.avatar}`}
+                  sx={{ width: 240, height: 240 }}
+                />
+              </div>
+            )}
           </Grid>
         </Grid>
 
