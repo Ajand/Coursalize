@@ -18,9 +18,6 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { DataContext } from "../lib/DataProvider";
 
-const userTableUri =
-  "https://testnet.tableland.network/query?s=SELECT%20*%20FROM%20coursalize_80001_2565";
-
 const Header = () => {
   const [domLoader, setDomLoader] = useState(false);
 

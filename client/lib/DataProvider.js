@@ -11,15 +11,17 @@ export const DataContext = createContext({
   setUser: null,
   getUserInfo: null,
   tableland: null,
-  courseIds: null
+  courseIds: null,
+  getCourseInfo: null,
 });
 
 const TABLE_LAND_URI = "https://testnet.tableland.network";
 const coursesAddress = "0xC10C99f625E851593AA1D450DF1db9e040bc19eA";
 const userTable = "coursalize_80001_2725";
+const lectureTable = "coursalize_80001_2724"; 
 const courseTable = "coursalize_80001_2723";
 
-export const DataProvider = ({ children,  }) => {
+export const DataProvider = ({ children }) => {
   const [coursesContract, setCoursesContract] = useState(null);
   const [tableland, setTableland] = useState(null);
 
@@ -76,9 +78,23 @@ export const DataProvider = ({ children,  }) => {
     }
   };
 
+  const getCourseInfo = async (id) => {
+    if (tableland) {
+      return tableland.read(`SELECT * FROM ${courseTable} WHERE id=id`);
+    }
+  };
+
   return (
     <DataContext.Provider
-      value={{ coursesContract, courseUser, setUser, getUserInfo, tableland, courseIds }}
+      value={{
+        coursesContract,
+        courseUser,
+        setUser,
+        getUserInfo,
+        tableland,
+        courseIds,
+        getCourseInfo,
+      }}
     >
       {children}
     </DataContext.Provider>
