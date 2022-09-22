@@ -10,6 +10,7 @@ import {
   Divider,
   Avatar,
   Button,
+  Skeleton,
 } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import CourseCard from "../../components/CourseCard";
@@ -17,7 +18,6 @@ import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
 import { DataContext } from "../../lib/DataProvider";
-import PlaceholderLoading from "react-placeholder-loading";
 
 const Profile = () => {
   const course = {
@@ -66,8 +66,6 @@ const Profile = () => {
     .fill(0)
     .map((c, i) => ({ ...course, id: i }));
 
-  console.log(loadingInfo, userInfo);
-
   return (
     <div>
       <Header />
@@ -84,10 +82,14 @@ const Profile = () => {
                 display: flex;
               `}
             >
-              {loadingInfo || !userInfo.display_name ? (
-                <>
-                  <PlaceholderLoading shape="rect" width={300} height={36} />
-                </>
+              {loadingInfo || !userInfo ? (
+                <div
+                  css={css`
+                    width: 50%;
+                  `}
+                >
+                  <Skeleton variant="text" sx={{ fontSize: "2.5rem" }} />
+                </div>
               ) : (
                 <Typography
                   css={css`
@@ -117,70 +119,100 @@ const Profile = () => {
                 )}
             </div>
 
-            {loadingInfo || !userInfo.headline ? (
+            {loadingInfo || !userInfo ? (
               <>
                 <div
                   css={css`
-                    margin-top: 1em;
+                    width: 70%;
                   `}
                 >
-                  <PlaceholderLoading shape="rect" width={360} height={20} />
+                  <Skeleton variant="text" sx={{ fontSize: "1.5rem" }} />
                 </div>
               </>
             ) : (
               <Typography variant="h6">{userInfo.headline}</Typography>
             )}
 
-            {loadingInfo || !userInfo.display_name ? (
+            {loadingInfo || !userInfo ? (
               <>
                 <div
                   css={css`
-                    margin-top: 1em;
+                    width: 20%;
                   `}
                 >
-                  <PlaceholderLoading shape="rect" width={80} height={32} />
+                  <Skeleton variant="text" sx={{ fontSize: "1.25rem" }} />
                 </div>
                 <div
                   css={css`
-                    margin-top: 1em;
+                    width: 100%;
+                    margin-bottom: 10;
                   `}
                 >
-                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
                 </div>
                 <div
                   css={css`
-                    margin-top: 1em;
+                    width: 100%;
+                    margin-bottom: 10;
                   `}
                 >
-                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
                 </div>{" "}
                 <div
                   css={css`
-                    margin-top: 1em;
+                    width: 100%;
+                    margin-bottom: 10;
                   `}
                 >
-                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
                 </div>{" "}
                 <div
                   css={css`
-                    margin-top: 1em;
+                    width: 100%;
+                    margin-bottom: 10;
                   `}
                 >
-                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
                 </div>{" "}
                 <div
                   css={css`
-                    margin-top: 1em;
+                    width: 100%;
+                    margin-bottom: 10;
                   `}
                 >
-                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
                 </div>{" "}
                 <div
                   css={css`
-                    margin-top: 1em;
+                    width: 100%;
+                    margin-bottom: 10;
                   `}
                 >
-                  <PlaceholderLoading shape="rect" width={500} height={16} />
+                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                </div>{" "}
+                <div
+                  css={css`
+                    width: 100%;
+                    margin-bottom: 10;
+                  `}
+                >
+                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                </div>{" "}
+                <div
+                  css={css`
+                    width: 100%;
+                    margin-bottom: 10;
+                  `}
+                >
+                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                </div>{" "}
+                <div
+                  css={css`
+                    width: 100%;
+                    margin-bottom: 10;
+                  `}
+                >
+                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
                 </div>
               </>
             ) : (
@@ -202,7 +234,7 @@ const Profile = () => {
           </Grid>
 
           <Grid item md={4}>
-            {loadingInfo || !userInfo.display_name ? (
+            {loadingInfo || !userInfo ? (
               <>
                 <div
                   css={css`
@@ -210,7 +242,7 @@ const Profile = () => {
                     justify-content: center;
                   `}
                 >
-                  <PlaceholderLoading shape="circle" width={240} height={240} />
+                  <Skeleton variant="circular" width={240} height={240} />
                 </div>
               </>
             ) : (

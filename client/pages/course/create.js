@@ -1,12 +1,23 @@
 /* eslint-disable react/react-in-jsx-scope -- Unaware of jsxImportSource */
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Header from "../../components/Header";
 import { Container, Grid, Paper, Typography, Divider } from "@mui/material";
 import CourseForm from "../../components/CourseForm";
+import { DataContext } from "../../lib/DataProvider";
+import { uploadFile } from "../../lib/web3StorageHelpers";
+import { useRouter } from "next/router";
 
 const CreateCourse = () => {
+  const [loading, setLoading] = useState(false);
+
+  const { coursesContract, courseIds } = useContext(DataContext);
+
+  const cci = courseIds();
+
+  const router = useRouter();
+
   const [course, setCourseInput] = useState({
     title: "",
     category: "",
@@ -22,6 +33,7 @@ const CreateCourse = () => {
   };
 
   const isDisabled = () => {
+    if (loading) return true;
     const { title, category, price, description } = course;
     if (title && category && !isNaN(price) && description) return false;
     return true;
@@ -57,8 +69,41 @@ const CreateCourse = () => {
                 course={course}
                 setCourse={setCourse}
                 isDisabled={isDisabled()}
-                submitLabel="Create The Course"
-                onSubmit={() => {}}
+                submitLabel={
+                  !loading ? "Create The Course" : "Creating the course"
+                }
+                onSubmit={async () => {
+                  const nextIds = cci.data.toString();
+                  setLoading(true);
+
+                  let coverCid = "";
+                  try {
+                    if (course.cover) {
+                      coverCid = await uploadFile(course.cover);
+                    }
+                    console.log(
+                      course.title,
+                      course.category,
+                      course.description,
+                      coverCid,
+                      Number(course.price)
+                    );
+
+                    const tx = await coursesContract.createCourse(
+                      course.title,
+                      course.category,
+                      course.description,
+                      coverCid,
+                      Number(course.price)
+                    );
+                    await tx.wait();
+                    router.push(`/course/${nextIds}`);
+                    setLoading(false);
+                  } catch (err) {
+                    setLoading(false);
+                    console.log(err);
+                  }
+                }}
               />
             </Paper>
           </Grid>

@@ -11,13 +11,15 @@ export const DataContext = createContext({
   setUser: null,
   getUserInfo: null,
   tableland: null,
+  courseIds: null
 });
 
 const TABLE_LAND_URI = "https://testnet.tableland.network";
-const coursesAddress = "0x0EaAADDF88f96ddf75AE3781be49f6F776f01E72";
-const userTable = "coursalize_80001_2641";
+const coursesAddress = "0xC10C99f625E851593AA1D450DF1db9e040bc19eA";
+const userTable = "coursalize_80001_2725";
+const courseTable = "coursalize_80001_2723";
 
-export const DataProvider = ({ children }) => {
+export const DataProvider = ({ children,  }) => {
   const [coursesContract, setCoursesContract] = useState(null);
   const [tableland, setTableland] = useState(null);
 
@@ -42,6 +44,13 @@ export const DataProvider = ({ children }) => {
 
     main();
   }, []);
+
+  const courseIds = (userAddress) =>
+    useContractRead({
+      addressOrName: coursesAddress,
+      contractInterface: CoursesAbi,
+      functionName: "_courseIds",
+    });
 
   const courseUser = (userAddress) =>
     useContractRead({
@@ -69,7 +78,7 @@ export const DataProvider = ({ children }) => {
 
   return (
     <DataContext.Provider
-      value={{ coursesContract, courseUser, setUser, getUserInfo, tableland }}
+      value={{ coursesContract, courseUser, setUser, getUserInfo, tableland, courseIds }}
     >
       {children}
     </DataContext.Provider>

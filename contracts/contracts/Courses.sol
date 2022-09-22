@@ -20,18 +20,18 @@ contract Courses is ERC1155 {
 
     string private _courseTable;
     uint256 private _courseTableId;
-    Counters.Counter private _courseIds;
+    Counters.Counter public _courseIds;
     mapping(uint256 => Course) public _courses;
 
     // Lecture Table
     string private _lectureTable;
-    uint256 private _lectureTableId;
+    uint256 public _lectureTableId;
     Counters.Counter private _lectureIds;
 
     // Users Table
     string private _userTable;
     uint256 private _userTableId;
-    Counters.Counter private _userIds;
+    Counters.Counter public _userIds;
     mapping(address => bool) public _users;
 
     // Reviews Table
