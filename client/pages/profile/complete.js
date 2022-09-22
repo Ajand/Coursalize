@@ -1,10 +1,14 @@
 /* eslint-disable react/react-in-jsx-scope -- Unaware of jsxImportSource */
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import Header from "../../components/Header";
 import { Container, Grid, Paper, Typography, Divider } from "@mui/material";
 import ProfileForm from "../../components/ProfileForm";
+import { uploadFile } from "../../lib/web3StorageHelpers";
+import { DataContext } from "../../lib/DataProvider";
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
 
 const CompleteProfile = () => {
   const [profile, setProfileInput] = useState({
@@ -13,6 +17,12 @@ const CompleteProfile = () => {
     bio: "",
     avatar: null,
   });
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false);
+  const { address } = useAccount();
+
+  const { coursesContract } = useContext(DataContext);
 
   const setProfile = (key, value) => {
     const nProfile = { ...profile };
@@ -21,9 +31,9 @@ const CompleteProfile = () => {
   };
 
   const isDisabled = () => {
+    if (loading) return true;
     const { displayName, headline, bio } = profile;
     if (displayName && headline && bio) return false;
-
     return true;
   };
 
@@ -57,8 +67,37 @@ const CompleteProfile = () => {
                 profile={profile}
                 setProfile={setProfile}
                 isDisabled={isDisabled()}
-                submitLabel="Complete Profile"
-                onSubmit={() => {}}
+                submitLabel={!loading ? "Complete Profile" : "Setting User"}
+                onSubmit={async () => {
+                  setLoading(true);
+
+                  let avatarCid = "";
+                  try {
+                    if (profile.avatar) {
+                      avatarCid = await uploadFile(profile.avatar);
+                    }
+
+                    console.log(
+                      profile.displayName,
+                      profile.headline,
+                      profile.bio,
+                      avatarCid
+                    );
+
+                    const tx = await coursesContract.setUser(
+                      profile.displayName,
+                      profile.headline,
+                      profile.bio,
+                      avatarCid
+                    );
+                    await tx.wait();
+                    setLoading(false);
+                    router.push(`/profile/${address}`);
+                  } catch (err) {
+                    setLoading(false);
+                    console.log(err);
+                  }
+                }}
               />
             </Paper>
           </Grid>
