@@ -34,10 +34,11 @@ const Profile = () => {
   const { address: userAddress } = useAccount();
   const router = useRouter();
   const { address } = router.query;
-  const { getUserInfo, tableland } = useContext(DataContext);
+  const { getUserInfo, tableland, getUserCourses } = useContext(DataContext);
 
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [userCourses, setUserCourses] = useState([]);
 
   const formatResult = (result) => {
     return result.rows.map((row, i) =>
@@ -52,8 +53,19 @@ const Profile = () => {
   useEffect(() => {
     const main = async () => {
       setLoadingInfo(true);
-      const uInfo = await getUserInfo(address.toLowerCase());
-      setUserInfo(formatResult(uInfo)[0]);
+      try {
+        const uInfo = await getUserInfo(address.toLowerCase());
+        setUserInfo(formatResult(uInfo)[0]);
+      } catch (err) {
+        console.log(err);
+      }
+
+      try {
+        const uCourses = await getUserCourses(address.toLowerCase());
+        setUserCourses(formatResult(uCourses));
+      } catch (err) {
+        console.log(err);
+      }
       setLoadingInfo(false);
     };
 
@@ -65,6 +77,8 @@ const Profile = () => {
   const courses = Array(6)
     .fill(0)
     .map((c, i) => ({ ...course, id: i }));
+
+  console.log(userCourses);
 
   return (
     <div>
@@ -269,10 +283,10 @@ const Profile = () => {
           `}
           variant="h5"
         >
-          My Courses(6)
+          My Courses({userCourses.length})
         </Typography>
         <Grid container spacing={4}>
-          {courses.map((course) => (
+          {userCourses.map((course) => (
             <Grid item md={4}>
               <CourseCard key={course.id} course={course} />
             </Grid>

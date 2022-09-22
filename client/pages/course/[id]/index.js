@@ -42,8 +42,12 @@ const Course = () => {
   useEffect(() => {
     const main = async () => {
       setLoadingInfo(true);
-      const cInfo = await getCourseInfo(id);
-      setCourseInfo(formatResult(cInfo)[0]);
+      try {
+        const cInfo = await getCourseInfo(id);
+        setCourseInfo(formatResult(cInfo)[0]);
+      } catch (err) {
+        console.log(err);
+      }
       setLoadingInfo(false);
     };
 
@@ -66,6 +70,7 @@ const Course = () => {
             <div
               css={css`
                 display: flex;
+                align-items: center;
               `}
             >
               {loadingInfo || !courseInfo ? (
@@ -88,22 +93,54 @@ const Course = () => {
                 </Typography>
               )}
               {userAddress &&
-                courseInfo &&
-                courseInfo.instructor.toLowerCase() ===
-                  userAddress.toLowerCase() && (
+              courseInfo &&
+              courseInfo.instructor.toLowerCase() ===
+                userAddress.toLowerCase() ? (
+                <Button
+                  css={css`
+                    margin-left: 16px;
+                  `}
+                  color="secondary"
+                  size="small"
+                  onClick={() => {
+                    router.push(`/course/${id}/edit`);
+                  }}
+                >
+                  Edit Course
+                </Button>
+              ) : (
+                <div
+                  css={css`
+                    display: flex;
+                  `}
+                >
+                  <Typography
+                    variant="h6"
+                    css={(theme) =>
+                      css`
+                        color: ${theme.palette.secondary.main};
+                        margin-left: 16px;
+                      `
+                    }
+                  >
+                    {courseInfo?.price} $MATIC
+                  </Typography>
+
                   <Button
                     css={css`
                       margin-left: 16px;
                     `}
-                    color="secondary"
+                    color="primary"
+                    variant="contained"
                     size="small"
                     onClick={() => {
                       router.push(`/course/${id}/edit`);
                     }}
                   >
-                    Edit Course
+                    Buy The Course
                   </Button>
-                )}
+                </div>
+              )}
             </div>
 
             {loadingInfo || !courseInfo ? (
@@ -274,13 +311,18 @@ const Course = () => {
                 Description
               </Typography>
               <div>
-                <Button
-                  onClick={() => router.push(`/course/${id}/add-lecture`)}
-                  variant="contained"
-                  size="small"
-                >
-                  Add Lecture
-                </Button>
+                {userAddress &&
+                  courseInfo &&
+                  courseInfo.instructor.toLowerCase() ===
+                    userAddress.toLowerCase() && (
+                    <Button
+                      onClick={() => router.push(`/course/${id}/add-lecture`)}
+                      variant="contained"
+                      size="small"
+                    >
+                      Add Lecture
+                    </Button>
+                  )}
               </div>
             </div>
             <LectureList courseId={id} hasAccess={true} />

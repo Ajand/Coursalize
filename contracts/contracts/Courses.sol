@@ -198,7 +198,7 @@ contract Courses is ERC1155 {
                     Strings.toHexString(uint160(msg.sender), 20),
                     "', '",
                     _avatar,
-                    "')"
+                    " ')"
                 )
             );
             _userIds.increment();

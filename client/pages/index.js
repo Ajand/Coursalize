@@ -6,22 +6,36 @@ import { ethers } from "ethers";
 import CourseCard from "../components/CourseCard";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
+import { DataContext } from "../lib/DataProvider";
+import { useContext, useEffect, useState } from "react";
 
 const Home = () => {
-  const course = {
-    title: "The Complete 2022 Web Development Bootcamp",
-    cover: "https://img-c.udemycdn.com/course/240x135/1565838_e54e_16.jpg",
-    category: 0,
-    price: String(ethers.utils.parseEther("500")),
-    instructor: {
-      name: "Dr. Angela Yu",
-      avatar: "https://img-c.udemycdn.com/user/200_H/31334738_a13c_2.jpg",
-    },
+  const { getAllCourses, tableland } = useContext(DataContext);
+  const [loadingInfo, setLoadingInfo] = useState(false);
+  const [courses, setCourses] = useState([]);
+
+  const formatResult = (result) => {
+    return result.rows.map((row, i) =>
+      row.reduce((pV, cV, j) => {
+        const nObj = { ...pV };
+        nObj[result.columns[j].name] = cV;
+        return nObj;
+      }, {})
+    );
   };
 
-  const courses = Array(12)
-    .fill(0)
-    .map((c, i) => ({ ...course, id: i }));
+  useEffect(() => {
+    const main = async () => {
+      setLoadingInfo(true);
+      const uCourses = await getAllCourses();
+      setCourses(formatResult(uCourses));
+      setLoadingInfo(false);
+    };
+
+    if (tableland) {
+      main();
+    }
+  }, [tableland]);
 
   return (
     <div>

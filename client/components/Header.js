@@ -39,12 +39,6 @@ const Header = () => {
 
   const { data: userData } = courseUser(address);
 
-  useEffect(() => {
-    if (userData === false) {
-      router.push(`/profile/complete`);
-    }
-  }, [userData]);
-
   const handleMenu = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -152,7 +146,10 @@ const Header = () => {
                 <Button
                   color="primary"
                   variant="contained"
-                  onClick={() => connect()}
+                  onClick={() => {
+                    connect();
+                    router.push(`/profile/complete`);
+                  }}
                 >
                   Connect
                 </Button>

@@ -14,14 +14,16 @@ export const DataContext = createContext({
   courseIds: null,
   getCourseInfo: null,
   getCourseLectures: null,
-  getLecture: null
+  getLecture: null,
+  getUserCourses: null,
+  getAllCourses: null,
 });
 
 const TABLE_LAND_URI = "https://testnet.tableland.network";
-const coursesAddress = "0xC10C99f625E851593AA1D450DF1db9e040bc19eA";
-const userTable = "coursalize_80001_2725";
-const lectureTable = "coursalize_80001_2724";
-const courseTable = "coursalize_80001_2723";
+const coursesAddress = "0xdE07a326c07c0427022A8FA9193401Aa238EF6F3";
+const userTable = "coursalize_80001_2749";
+const lectureTable = "coursalize_80001_2748";
+const courseTable = "coursalize_80001_2747";
 
 export const DataProvider = ({ children }) => {
   const [coursesContract, setCoursesContract] = useState(null);
@@ -86,6 +88,20 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  const getUserCourses = async (userAddress) => {
+    if (tableland) {
+      return tableland.read(
+        `SELECT * FROM ${courseTable} WHERE instructor='${userAddress}'`
+      );
+    }
+  };
+
+  const getAllCourses = async () => {
+    if (tableland) {
+      return tableland.read(`SELECT * FROM ${courseTable}`);
+    }
+  };
+
   const getCourseLectures = async (courseId) => {
     if (tableland) {
       return tableland.read(
@@ -113,7 +129,9 @@ export const DataProvider = ({ children }) => {
         courseIds,
         getCourseInfo,
         getCourseLectures,
-        getLecture
+        getLecture,
+        getUserCourses,
+        getAllCourses,
       }}
     >
       {children}

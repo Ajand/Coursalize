@@ -35,7 +35,7 @@ const CreateCourse = () => {
   const isDisabled = () => {
     if (loading) return true;
     const { title, category, price, description } = course;
-    if (title && category && !isNaN(price) && description) return false;
+    if (title && !isNaN(category) && !isNaN(price) && description) return false;
     return true;
   };
 

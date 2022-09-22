@@ -4,17 +4,52 @@ import { css } from "@emotion/react";
 import { Paper, Avatar, Typography, Chip } from "@mui/material";
 import { getCategoryName } from "../utils/courseCategories";
 import { ethers } from "ethers";
+import { useRouter } from "next/router";
+import { DataContext } from "../lib/DataProvider";
+import { useContext, useEffect, useState } from "react";
 
 const CourseCard = ({ course }) => {
+  const router = useRouter();
+  const { getUserInfo, tableland } = useContext(DataContext);
+
+  const [loadingInfo, setLoadingInfo] = useState(false);
+  const [instructorInfo, setInstructorInfo] = useState(null);
+
+  const formatResult = (result) => {
+    return result.rows.map((row, i) =>
+      row.reduce((pV, cV, j) => {
+        const nObj = { ...pV };
+        nObj[result.columns[j].name] = cV;
+        return nObj;
+      }, {})
+    );
+  };
+
+  useEffect(() => {
+    const main = async () => {
+      setLoadingInfo(true);
+      const uInfo = await getUserInfo(course.instructor.toLowerCase());
+      setInstructorInfo(formatResult(uInfo)[0]);
+      setLoadingInfo(false);
+    };
+
+    if (tableland && course.instructor && course.instructor.toLowerCase) {
+      main();
+    }
+  }, [tableland]);
+
   return (
     <Paper
       css={css`
         cursor: pointer;
         overflow: hidden;
       `}
+      onClick={() => {
+        router.push(`/course/${course.id}`);
+      }}
     >
       <img
-        src={course.cover}
+        src={`https://nftstorage.link/ipfs/${course.cover}`}
         css={css`
           width: 100%;
         `}
@@ -48,7 +83,7 @@ const CourseCard = ({ course }) => {
             }
             variant="subtitle1"
           >
-            {ethers.utils.formatEther(course.price)} $MATIC
+            {course.price} $MATIC
           </Typography>
         </div>
         <Typography
@@ -61,23 +96,27 @@ const CourseCard = ({ course }) => {
           {course.title}
         </Typography>
 
-        <div
-          css={css`
-            display: flex;
-            align-items: center;
-            justify-content: end;
-          `}
-        >
-          <Typography
+        {instructorInfo && (
+          <div
             css={css`
-              margin-right: 0.75em;
+              display: flex;
+              align-items: center;
+              justify-content: end;
             `}
-            variant="body2"
           >
-            {course.instructor.name}
-          </Typography>
-          <Avatar src={course.instructor.avatar} />
-        </div>
+            <Typography
+              css={css`
+                margin-right: 0.75em;
+              `}
+              variant="body2"
+            >
+              {instructorInfo.display_name}
+            </Typography>
+            <Avatar
+              src={`https://nftstorage.link/ipfs/${instructorInfo.avatar}`}
+            />
+          </div>
+        )}
       </div>
     </Paper>
   );

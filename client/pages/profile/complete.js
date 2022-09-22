@@ -22,7 +22,15 @@ const CompleteProfile = () => {
   const [loading, setLoading] = useState(false);
   const { address } = useAccount();
 
-  const { coursesContract } = useContext(DataContext);
+  const { coursesContract, courseUser } = useContext(DataContext);
+  const { data: userData } = courseUser(address);
+
+  useEffect(() => {
+    console.log(userData)
+    if (userData) {
+      router.push(`/profile/${address}`);
+    }
+  }, [userData]);
 
   const setProfile = (key, value) => {
     const nProfile = { ...profile };
@@ -74,7 +82,7 @@ const CompleteProfile = () => {
                   let avatarCid = "";
                   try {
                     if (profile.avatar) {
-                      avatarCid = await uploadFile(profile.avatar);
+                      //avatarCid = await uploadFile(profile.avatar);
                     }
 
                     console.log(
