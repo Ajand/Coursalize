@@ -1,7 +1,7 @@
 /* eslint-disable react/react-in-jsx-scope -- Unaware of jsxImportSource */
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Container,
   Toolbar,
@@ -15,6 +15,11 @@ import { AccountCircle } from "@mui/icons-material";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { useRouter } from "next/router";
+import axios from "axios";
+import { DataContext } from "../lib/DataProvider";
+
+const userTableUri =
+  "https://testnet.tableland.network/query?s=SELECT%20*%20FROM%20coursalize_80001_2565";
 
 const Header = () => {
   const [domLoader, setDomLoader] = useState(false);
@@ -32,6 +37,16 @@ const Header = () => {
   const { disconnect } = useDisconnect();
 
   const router = useRouter();
+
+  const { courseUser } = useContext(DataContext);
+
+  const { data: userData } = courseUser(address);
+
+  useEffect(() => {
+    if (userData === false) {
+      router.push(`/profile/complete`);
+    }
+  }, [userData]);
 
   const handleMenu = (e) => {
     setAnchorEl(e.currentTarget);
@@ -83,12 +98,15 @@ const Header = () => {
           <div>
             {isConnected ? (
               <>
-                <Button
-                  color="inherit"
-                  onClick={() => router.push(`/course/create`)}
-                >
-                  + Course
-                </Button>
+                {userData !== false && (
+                  <Button
+                    color="inherit"
+                    onClick={() => router.push(`/course/create`)}
+                  >
+                    + Course
+                  </Button>
+                )}
+
                 <>
                   <IconButton
                     size="large"
@@ -116,7 +134,10 @@ const Header = () => {
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={() => router.push(`/profile/${address}`)}>
+                  <MenuItem
+                    disabled={userData === false}
+                    onClick={() => router.push(`/profile/${address}`)}
+                  >
                     Profile
                   </MenuItem>
                   <MenuItem

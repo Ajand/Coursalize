@@ -1,7 +1,9 @@
 import "../styles/globals.css";
 import { createTheme, ThemeProvider, CssBaseline } from "@mui/material";
-import { WagmiConfig, createClient } from "wagmi";
+import { WagmiConfig, createClient, configureChains, chain } from "wagmi";
 import { getDefaultProvider } from "ethers";
+import { DataProvider } from "../lib/DataProvider";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 const darkTheme = createTheme({
   typography: {
@@ -44,18 +46,35 @@ const darkTheme = createTheme({
   },
 });
 
+const { polygonMumbai} = chain
+
+const { provider, webSocketProvider } = configureChains(
+  [polygonMumbai],
+  [
+    jsonRpcProvider({
+      rpc: (chain) => {
+        if (chain.id !== polygonMumbai.id) return null;
+        return { http: chain.rpcUrls.default };
+      },
+    }),
+  ]
+);
+
 const client = createClient({
   autoConnect: true,
-  provider: getDefaultProvider(),
+  provider,
+  webSocketProvider,
 });
 
 function MyApp({ Component, pageProps }) {
   return (
     <WagmiConfig client={client}>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <DataProvider>
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </DataProvider>
     </WagmiConfig>
   );
 }
