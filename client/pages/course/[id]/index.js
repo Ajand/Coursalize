@@ -67,7 +67,7 @@ const Course = () => {
           margin-bottom: 5em;
         `}
       >
-        <Grid container>
+        <Grid container spacing={4}>
           <Grid item md={8}>
             <div
               css={css`
@@ -284,7 +284,7 @@ const Course = () => {
                     justify-content: center;
                   `}
                 >
-                  <Skeleton variant="rectangle" width={"90%"} height={240} />
+                  <Skeleton variant="rectangle" width={"100%"} height={240} />
                 </div>
               </>
             ) : (
@@ -322,7 +322,7 @@ const Course = () => {
                 `}
                 variant="h5"
               >
-                Description
+                Lectures
               </Typography>
               <div>
                 {userAddress &&

@@ -58,22 +58,28 @@ const LectureList = ({ courseId, hasAccess }) => {
         </div>
       ) : (
         <List>
-          {lectures.map((lecture) => (
-            <ListItem
-              button={hasAccess}
-              onClick={() => {
-                if (hasAccess) {
-                  router.push(`/course/${courseId}/lectures/${lecture.id}`);
-                }
-              }}
-              key={lecture.id}
-            >
-              <ListItemText
-                primary={lecture.name}
-                secondary={lecture.description}
-              />
+          {lectures.length > 0 ? (
+            lectures.map((lecture) => (
+              <ListItem
+                button={hasAccess}
+                onClick={() => {
+                  if (hasAccess) {
+                    router.push(`/course/${courseId}/lectures/${lecture.id}`);
+                  }
+                }}
+                key={lecture.id}
+              >
+                <ListItemText
+                  primary={lecture.name}
+                  secondary={lecture.description}
+                />
+              </ListItem>
+            ))
+          ) : (
+            <ListItem>
+              <ListItemText primary="No lecture yet." />
             </ListItem>
-          ))}
+          )}
         </List>
       )}
     </Paper>
