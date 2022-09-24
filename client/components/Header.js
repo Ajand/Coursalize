@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { AccountCircle } from "@mui/icons-material";
+import { AccountCircle, Textsms } from "@mui/icons-material";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { useRouter } from "next/router";
@@ -99,6 +99,18 @@ const Header = () => {
                 )}
 
                 <>
+                  <IconButton
+                    size="large"
+                    aria-label="messages"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={() => {
+                      router.push("/messages");
+                    }}
+                    color="inherit"
+                  >
+                    <Textsms />
+                  </IconButton>
                   <IconButton
                     size="large"
                     aria-label="account of current user"
