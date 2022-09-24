@@ -22,9 +22,11 @@ import LectureList from "../../../components/LectureList";
 const Course = () => {
   const router = useRouter();
   const { id } = router.query;
-  const { getCourseInfo, tableland } = useContext(DataContext);
+  const { getCourseInfo, tableland, coursesContract } = useContext(DataContext);
 
   const { address: userAddress } = useAccount();
+
+  const [buyLoading, setBuyLoading] = useState(false);
 
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [courseInfo, setCourseInfo] = useState(null);
@@ -133,11 +135,23 @@ const Course = () => {
                     color="primary"
                     variant="contained"
                     size="small"
-                    onClick={() => {
-                      router.push(`/course/${id}/edit`);
+                    disabled={buyLoading}
+                    onClick={async () => {
+                      try {
+                        setBuyLoading(true);
+                        const tx = await coursesContract.mintCourse(id, {
+                          value: courseInfo?.price,
+                        });
+                        await tx.wait();
+                        setBuyLoading(false);
+                        router.push(`/course/${id}`);
+                      } catch (err) {
+                        setBuyLoading(false);
+                        console.log(err);
+                      }
                     }}
                   >
-                    Buy The Course
+                    {buyLoading ? "Buying The Course" : "Buy The Course"}
                   </Button>
                 </div>
               )}

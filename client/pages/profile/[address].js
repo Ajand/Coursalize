@@ -34,11 +34,18 @@ const Profile = () => {
   const { address: userAddress } = useAccount();
   const router = useRouter();
   const { address } = router.query;
-  const { getUserInfo, tableland, getUserCourses } = useContext(DataContext);
+  const {
+    getUserInfo,
+    tableland,
+    getUserCourses,
+    getUserEnrollments,
+    getCoursesByIds,
+  } = useContext(DataContext);
 
   const [loadingInfo, setLoadingInfo] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [userCourses, setUserCourses] = useState([]);
+  const [enrollmentCourses, setEnrollmentCourses] = useState([]);
 
   const formatResult = (result) => {
     return result.rows.map((row, i) =>
@@ -66,6 +73,19 @@ const Profile = () => {
       } catch (err) {
         console.log(err);
       }
+
+      try {
+        const enrolls = await getUserEnrollments(address.toLowerCase());
+        const enrolledCourses = enrolls.map((enr) => enr.token_id);
+        getCoursesByIds(enrolledCourses)
+          .then((a) => formatResult(a))
+          .then((enrollmentCourses) => setEnrollmentCourses(enrollmentCourses))
+          .catch((err) => {
+            console.log(err);
+          });
+      } catch (err) {
+        console.log(err);
+      }
       setLoadingInfo(false);
     };
 
@@ -77,8 +97,6 @@ const Profile = () => {
   const courses = Array(6)
     .fill(0)
     .map((c, i) => ({ ...course, id: i }));
-
-  console.log(userCourses);
 
   return (
     <div>
@@ -274,24 +292,48 @@ const Profile = () => {
             )}
           </Grid>
         </Grid>
-
-        <Typography
-          css={css`
-            margin-top: 2em;
-            margin-bottom: 0.5em;
-            font-weight: 700;
-          `}
-          variant="h5"
-        >
-          My Courses({userCourses.length})
-        </Typography>
-        <Grid container spacing={4}>
-          {userCourses.map((course) => (
-            <Grid item md={4}>
-              <CourseCard key={course.id} course={course} />
+        {userCourses.length > 0 && (
+          <>
+            <Typography
+              css={css`
+                margin-top: 2em;
+                margin-bottom: 0.5em;
+                font-weight: 700;
+              `}
+              variant="h5"
+            >
+              My Courses ({userCourses.length})
+            </Typography>
+            <Grid container spacing={4}>
+              {userCourses.map((course) => (
+                <Grid item md={4}>
+                  <CourseCard key={course.id} course={course} />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
+          </>
+        )}
+        {enrollmentCourses.length > 0 && (
+          <>
+            <Typography
+              css={css`
+                margin-top: 2em;
+                margin-bottom: 0.5em;
+                font-weight: 700;
+              `}
+              variant="h5"
+            >
+              Enrollments ({enrollmentCourses.length})
+            </Typography>
+            <Grid container spacing={4}>
+              {enrollmentCourses.map((course) => (
+                <Grid item md={4}>
+                  <CourseCard key={course.id} course={course} />
+                </Grid>
+              ))}
+            </Grid>
+          </>
+        )}
       </Container>
     </div>
   );

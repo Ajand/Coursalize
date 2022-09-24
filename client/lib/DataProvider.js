@@ -17,6 +17,8 @@ export const DataContext = createContext({
   getLecture: null,
   getUserCourses: null,
   getAllCourses: null,
+  getUserEnrollments: null,
+  getCoursesByIds: null,
 });
 
 const TABLE_LAND_URI = "https://testnet.tableland.network";
@@ -118,6 +120,55 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  const getUserEnrollments = async (userAddress) => {
+    const options = {
+      method: "GET",
+      url: `https://deep-index.moralis.io/api/v2/${userAddress}/nft`,
+      params: { chain: "mumbai", format: "decimal" },
+      headers: {
+        accept: "application/json",
+        "X-API-Key":
+          "hNmMb0ls4EikOE9wldrWGz1G7gb40622L0yUFOP10PBlS2G58KtqvUTkFL3lFU1x",
+      },
+    };
+
+    return axios
+      .request(options)
+      .then(function (response) {
+        return response.data;
+      })
+      .then((result) => result.result)
+      .then((result) =>
+        result.filter((row) => {
+          return (
+            row.token_address.toLowerCase() === coursesAddress.toLowerCase()
+          );
+        })
+      )
+      .catch(function (error) {
+        return error;
+      });
+  };
+
+  const getCoursesByIds = async (ids) => {
+    console.log(ids);
+    if (tableland) {
+      console.log(
+        `SELECT * FROM ${courseTable} WHERE id IN (${ids.join(", ")})`
+      );
+
+      try {
+        const a = await tableland.read(
+          `SELECT * FROM ${courseTable} WHERE id IN (${ids.join(", ")})`
+        );
+
+        return a;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
   return (
     <DataContext.Provider
       value={{
@@ -132,6 +183,8 @@ export const DataProvider = ({ children }) => {
         getLecture,
         getUserCourses,
         getAllCourses,
+        getUserEnrollments,
+        getCoursesByIds,
       }}
     >
       {children}
