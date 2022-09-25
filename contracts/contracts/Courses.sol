@@ -5,9 +5,17 @@ import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@tableland/evm/contracts/ITablelandTables.sol";
+import {ISuperfluid} from "./interfaces/superfluid/ISuperfluid.sol";
+import {IConstantFlowAgreementV1} from "./interfaces/agreements/IConstantFlowAgreementV1.sol";
+import {ISuperfluidToken} from "./interfaces/superfluid/ISuperfluidToken.sol";
+import {CFAv1Library} from "./apps/CFAv1Library.sol";
 
 contract Courses is ERC1155 {
     using Counters for Counters.Counter;
+    using CFAv1Library for CFAv1Library.InitData;
+
+    //initialize cfaV1 variable
+    CFAv1Library.InitData public cfaV1;
 
     ITablelandTables private _tableland;
     string private _tablePrefix = "coursalize";
@@ -41,7 +49,17 @@ contract Courses is ERC1155 {
     string private _baseURIString =
         "https://testnet.tableland.network/query?s=";
 
-    constructor(address registry) ERC1155(_baseURIString) {
+    // Sponsors
+    struct Sponsor {
+        address sender;
+        address token;
+        uint256 course;
+        string metadata;
+        int96 flowrate;
+    }
+    mapping(uint256 => Sponsor[]) sponsors;
+
+    constructor(address registry, ISuperfluid host) ERC1155(_baseURIString) {
         _tableland = ITablelandTables(registry);
 
         // Course Table
@@ -126,6 +144,20 @@ contract Courses is ERC1155 {
             "_",
             Strings.toString(_reviewTableId)
         );
+
+        cfaV1 = CFAv1Library.InitData(
+            host,
+            //here, we are deriving the address of the CFA using the host contract
+            IConstantFlowAgreementV1(
+                address(
+                    host.getAgreementClass(
+                        keccak256(
+                            "org.superfluid-finance.agreements.ConstantFlowAgreement.v1"
+                        )
+                    )
+                )
+            )
+        );
     }
 
     function courseURI() public view returns (string memory) {
@@ -173,7 +205,7 @@ contract Courses is ERC1155 {
                     _bio,
                     "', avatar = '",
                     _avatar,
-                    "' WHERE address = '",
+                    " ' WHERE address = '",
                     Strings.toHexString(uint160(msg.sender), 20),
                     "';"
                 )
@@ -231,7 +263,7 @@ contract Courses is ERC1155 {
                 _description,
                 "', '",
                 _cover,
-                "', ",
+                " ', ",
                 Strings.toString(_price),
                 ", '",
                 Strings.toHexString(uint160(msg.sender), 20),
@@ -280,7 +312,7 @@ contract Courses is ERC1155 {
                 ),
                 string.concat(
                     _cover,
-                    "', price = ",
+                    " ', price = ",
                     Strings.toString(_price),
                     " WHERE id = ",
                     Strings.toString(_courseId),
@@ -316,9 +348,38 @@ contract Courses is ERC1155 {
                 _description,
                 "', '",
                 _media,
-                "')"
+                " ')"
             )
         );
         _lectureIds.increment();
+    }
+
+    function sponsorCourse(
+        uint256 _courseId,
+        address _token,
+        int96 _flowrate,
+        string memory _metadata
+    ) public {
+        require(_courseId < _courseIds.current(), "not defined");
+
+        Sponsor[] storage courseSponsors = sponsors[_courseId];
+
+        courseSponsors.push(
+            Sponsor(msg.sender, _token, _courseId, _metadata, _flowrate)
+        );
+
+        cfaV1.createFlow(
+            _courses[_courseId].instructor,
+            ISuperfluidToken(_token),
+            _flowrate
+        );
+    }
+
+    function getCourseSponsors(uint256 _courseId)
+        public
+        view
+        returns (Sponsor[] memory courseSponsors)
+    {
+        courseSponsors = sponsors[_courseId];
     }
 }

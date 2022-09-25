@@ -8,10 +8,11 @@ const hre = require("hardhat");
 require("@nomiclabs/hardhat-etherscan");
 
 const registryAddress = "0x4b48841d4b32C4650E4ABc117A03FE8B51f38F68";
+const superfluidHost = "0xEB796bdb90fFA0f28255275e16936D25d3418603";
 
 async function main() {
   const Courses = await hre.ethers.getContractFactory("Courses");
-  const courses = await Courses.deploy(registryAddress);
+  const courses = await Courses.deploy(registryAddress, superfluidHost);
 
   await courses.deployed();
 
