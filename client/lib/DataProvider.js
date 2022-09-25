@@ -121,27 +121,29 @@ export const DataProvider = ({ children }) => {
   };
 
   const getUserEnrollments = async (userAddress) => {
+    const key = "ckey_c9c5be34b110429bab5387c7873";
+    const baseUri = "https://api.covalenthq.com/v1";
+
     const options = {
       method: "GET",
-      url: `https://deep-index.moralis.io/api/v2/${userAddress}/nft`,
-      params: { chain: "mumbai", format: "decimal" },
+      url: `https://api.covalenthq.com/v1/80001/address/${userAddress}/balances_v2/?quote-currency=USD&format=JSON&nft=true&no-nft-fetch=true&key=${key}`,
       headers: {
         accept: "application/json",
-        "X-API-Key":
-          "hNmMb0ls4EikOE9wldrWGz1G7gb40622L0yUFOP10PBlS2G58KtqvUTkFL3lFU1x",
       },
     };
 
     return axios
       .request(options)
       .then(function (response) {
-        return response.data;
+        console.log(response.data);
+        return response.data.data;
       })
-      .then((result) => result.result)
-      .then((result) =>
-        result.filter((row) => {
+      .then((result) => result.items)
+      .then((items) =>
+        items.filter((item) => {
+          console.log(item)
           return (
-            row.token_address.toLowerCase() === coursesAddress.toLowerCase()
+            item.contract_address.toLowerCase() === coursesAddress.toLowerCase()
           );
         })
       )

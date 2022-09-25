@@ -76,7 +76,8 @@ const Profile = () => {
 
       try {
         const enrolls = await getUserEnrollments(address.toLowerCase());
-        const enrolledCourses = enrolls.map((enr) => enr.token_id);
+        console.log(enrolls);
+        const enrolledCourses = enrolls.map((enr) => enr.nft_data[0].token_id);
         getCoursesByIds(enrolledCourses)
           .then((a) => formatResult(a))
           .then((enrollmentCourses) => setEnrollmentCourses(enrollmentCourses))
