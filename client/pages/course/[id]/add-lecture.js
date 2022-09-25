@@ -5,7 +5,7 @@ import { useState, useContext, useEffect } from "react";
 import Header from "../../../components/Header";
 import { Container, Grid, Paper, Typography, Divider } from "@mui/material";
 import LectureForm from "../../../components/LectureForm";
-import { uploadFile } from "../../../lib/web3StorageHelpers";
+import { uploadFile, upload } from "../../../lib/web3StorageHelpers";
 import { DataContext } from "../../../lib/DataProvider";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
@@ -14,6 +14,7 @@ const AddLecture = () => {
   const [lecture, setLectureInput] = useState({
     name: "",
     description: "",
+    public: false,
     media: null,
   });
   const router = useRouter();
@@ -23,7 +24,7 @@ const AddLecture = () => {
   const [loading, setLoading] = useState(false);
   const { address } = useAccount();
 
-  const { coursesContract } = useContext(DataContext);
+  const { coursesContract, generateUploadUrl } = useContext(DataContext);
 
   const setLecture = (key, value) => {
     const nProfile = { ...lecture };
@@ -73,15 +74,18 @@ const AddLecture = () => {
                   setLoading(true);
 
                   let mediaCid = "";
+
                   try {
                     if (lecture.media) {
                       mediaCid = await uploadFile(lecture.media);
                     }
 
+                    const descriptionCid = await upload(lecture.description);
+
                     const tx = await coursesContract.addLecture(
                       id,
                       lecture.name,
-                      lecture.description,
+                      descriptionCid,
                       mediaCid
                     );
                     await tx.wait();

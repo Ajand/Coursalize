@@ -6,7 +6,7 @@ import Header from "../../components/Header";
 import { Container, Grid, Paper, Typography, Divider } from "@mui/material";
 import CourseForm from "../../components/CourseForm";
 import { DataContext } from "../../lib/DataProvider";
-import { uploadFile } from "../../lib/web3StorageHelpers";
+import { uploadFile, upload } from "../../../lib/web3StorageHelpers";
 import { useRouter } from "next/router";
 
 const CreateCourse = () => {
@@ -89,10 +89,12 @@ const CreateCourse = () => {
                       Number(course.price)
                     );
 
+                    const descriptionCid = await upload(course.description);
+
                     const tx = await coursesContract.createCourse(
                       course.title,
                       course.category,
-                      course.description,
+                      descriptionCid,
                       coverCid,
                       Number(course.price)
                     );

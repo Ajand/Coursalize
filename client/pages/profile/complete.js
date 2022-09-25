@@ -5,7 +5,7 @@ import { useState, useContext, useEffect } from "react";
 import Header from "../../components/Header";
 import { Container, Grid, Paper, Typography, Divider } from "@mui/material";
 import ProfileForm from "../../components/ProfileForm";
-import { uploadFile } from "../../lib/web3StorageHelpers";
+import { uploadFile, upload } from "../../../lib/web3StorageHelpers";
 import { DataContext } from "../../lib/DataProvider";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
@@ -26,7 +26,6 @@ const CompleteProfile = () => {
   const { data: userData } = courseUser(address);
 
   useEffect(() => {
-    console.log(userData)
     if (userData) {
       router.push(`/profile/${address}`);
     }
@@ -82,20 +81,15 @@ const CompleteProfile = () => {
                   let avatarCid = "";
                   try {
                     if (profile.avatar) {
-                      //avatarCid = await uploadFile(profile.avatar);
+                      avatarCid = await uploadFile(profile.avatar);
                     }
 
-                    console.log(
-                      profile.displayName,
-                      profile.headline,
-                      profile.bio,
-                      avatarCid
-                    );
+                    const bioCid = await upload(profile.bio);
 
                     const tx = await coursesContract.setUser(
                       profile.displayName,
                       profile.headline,
-                      profile.bio,
+                      bioCid,
                       avatarCid
                     );
                     await tx.wait();

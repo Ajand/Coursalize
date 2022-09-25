@@ -18,6 +18,7 @@ import { DataContext } from "../../../lib/DataProvider";
 import { useAccount } from "wagmi";
 import { getCategoryName } from "../../../utils/courseCategories";
 import LectureList from "../../../components/LectureList";
+import TextResolver from "../../../components/TextResolver";
 
 const Course = () => {
   const router = useRouter();
@@ -269,7 +270,7 @@ const Course = () => {
                   Description
                 </Typography>
                 <Typography variant="body1">
-                  {courseInfo.description}
+                  <TextResolver cid={courseInfo.description} />
                 </Typography>
               </>
             )}

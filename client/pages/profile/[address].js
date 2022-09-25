@@ -18,6 +18,7 @@ import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
 import { DataContext } from "../../lib/DataProvider";
+import TextResolver from "../../components/TextResolver";
 
 const Profile = () => {
   const course = {
@@ -261,7 +262,9 @@ const Profile = () => {
                 >
                   About me
                 </Typography>
-                <Typography variant="body1">{userInfo.bio}</Typography>
+                <Typography variant="body1">
+                  <TextResolver cid={userInfo.bio} />
+                </Typography>
               </>
             )}
           </Grid>

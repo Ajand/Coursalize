@@ -16,6 +16,7 @@ import {
   Skeleton,
 } from "@mui/material";
 import LectureList from "../../../../components/LectureList";
+import TextResolver from "../../../../components/TextResolver";
 
 const Lecture = () => {
   const router = useRouter();
@@ -74,7 +75,9 @@ const Lecture = () => {
           controls
         />
         <Typography variant="h6">{lectureInfo.name}</Typography>
-        <Typography variant="body1">{lectureInfo.description}</Typography>
+        <Typography variant="body1">
+          <TextResolver cid={lectureInfo.description} />
+        </Typography>
         <LectureList courseId={id} hasAccess={true} />
       </Container>
     </div>

@@ -71,7 +71,6 @@ const LectureList = ({ courseId, hasAccess }) => {
               >
                 <ListItemText
                   primary={lecture.name}
-                  secondary={lecture.description}
                 />
               </ListItem>
             ))
